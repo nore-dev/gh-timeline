@@ -14,3 +14,11 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.text-center {
+  text-align: center;
+}
+
+.rounded {
+  border-radius: 100%;
+}
