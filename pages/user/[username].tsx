@@ -2,7 +2,7 @@
 import axios from "../../lib/axios"
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
 const Timeline: NextPage = () => {
@@ -11,9 +11,14 @@ const Timeline: NextPage = () => {
 
     useEffect(() => {
         if (!username) return
+        
         axios.get(`users/${username}`).then((res) => {
             setUser(res.data)
-        })
+        }).catch(error => {
+            Router.push({pathname: "/"})
+            console.log("User not found")
+        }) 
+
     }, [username])
 
     return (
