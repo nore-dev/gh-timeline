@@ -6,19 +6,30 @@ import Router, { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Image from "next/image"
 
-const Timeline: NextPage = () => {
+const TimelinePage: NextPage = () => {
     const { username } = useRouter().query
     const [user, setUser] = useState<any>({})
+    const [events, setEvents] = useState<any[]>([])
 
     useEffect(() => {
         if (!username) return
         
+
+        // Get user info
         axios.get(`users/${username}`).then((res) => {
             setUser(res.data)
         }).catch(error => {
             Router.push({pathname: "/"})
             console.log("User not found")
         }) 
+
+
+        axios.get(`users/${username}/events`).then((res) => {
+          setEvents(res.data)
+          console.log(res.data)
+        }).catch(error => {
+          Router.push({pathname: "/"})
+        })
 
     }, [username])
 
@@ -43,8 +54,17 @@ const Timeline: NextPage = () => {
 
 
         </div>
+        
+        {events.map((event) => (
+          <div key={event.id}>
+              <Image width={50} height={50} src={event.actor.avatar_url} alt="profile_photo" className="rounded"/>
+              <h3>{event.type}</h3>
+              <h4>{event.repo.name}</h4>
+          </div>
+        ))}
+
     </div>
   )
 }
 
-export default Timeline
+export default TimelinePage

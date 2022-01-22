@@ -10,7 +10,7 @@ const SearchBar: FC<SearchBarProps> = ():ReactElement => {
             (e) => setUsername(e.target.value)
         }></input>
 
-        <Link href={`user/${username}`}><a>Search</a></Link>
+        <Link href={`/user/${username}`}><a>Search</a></Link>
     </>
 }
 
