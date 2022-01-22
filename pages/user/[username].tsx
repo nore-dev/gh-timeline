@@ -5,13 +5,46 @@ import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Image from "next/image"
+import {
+  Timeline,
+  Events,
+  Event
+} from '@merc/react-timeline';
+
+const renderEvent = (event:any) => {
+  switch (event.type) {
+    case "CreateEvent":
+    case "DeleteEvent":
+    case "ForkEvent":
+    case "GollumEvent":
+    case "IssueCommentEvent":
+    case "IssuesEvent":
+    case "MemberEvent":
+    case "PullRequestEvent":
+    case "PullRequestReviewEvent":
+    case "PullRequestReviewCommentEvent":
+    case "ReleaseEvent":
+    case "SponsorshipEvent":
+    case "CommitCommentEvent":
+    case "WatchEvent":
+      return  <Event date={event.created_at} key={event.id}>
+        <div>
+        <Image src={event.actor.avatar_url} alt="pp" width={50} height={50} className="rounded"></Image>
+        <h3>{event.type}</h3>
+
+        <h4>{event.repo.name}</h4>
+        </div>
+      </Event>
+   
+  }
+}
 
 const TimelinePage: NextPage = () => {
     const { username } = useRouter().query
     const [user, setUser] = useState<any>({})
     const [events, setEvents] = useState<any[]>([])
 
-    useEffect(() => {
+      useEffect(() => {
         if (!username) return
         
 
@@ -55,13 +88,14 @@ const TimelinePage: NextPage = () => {
 
         </div>
         
+
+      <Timeline>
+        <Events >
         {events.map((event) => (
-          <div key={event.id}>
-              <Image width={50} height={50} src={event.actor.avatar_url} alt="profile_photo" className="rounded"/>
-              <h3>{event.type}</h3>
-              <h4>{event.repo.name}</h4>
-          </div>
+          renderEvent(event)
         ))}
+        </Events>
+      </Timeline>
 
     </div>
   )
