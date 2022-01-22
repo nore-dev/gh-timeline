@@ -4,6 +4,7 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
+import Image from "next/image"
 
 const Timeline: NextPage = () => {
     const { username } = useRouter().query
@@ -30,7 +31,9 @@ const Timeline: NextPage = () => {
       </Head>
 
         <div>
-        <img width={150} height={150} alt="profile_photo" className="rounded" src={user.avatar_url}></img>
+        { user.avatar_url &&
+          <Image width={150} height={150} src={user.avatar_url} alt="profile_photo" className="rounded"/>
+        }
         <h1>{user.login}</h1>
         <h3>{user.bio}</h3>
         <div>
