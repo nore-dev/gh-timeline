@@ -12,6 +12,7 @@ import {
 } from '@merc/react-timeline';
 import prettyDate from "../../lib/prettydate"
 import {GHEvent, GHUser} from "../../lib/GHType"
+import InfiniteScroll from "react-infinite-scroll-component"
 
 const renderEvent = (event:GHEvent) => {
   switch (event.type) {
@@ -59,10 +60,25 @@ const renderEvent = (event:GHEvent) => {
   }
 }
 
+
 const TimelinePage: NextPage = () => {
     const { username } = useRouter().query
     const [user, setUser] = useState<GHUser>({} as GHUser)
     const [events, setEvents] = useState<GHEvent[]>([])
+    const [hasMore, setHasmore] = useState(true)
+    const [page, setPage] = useState(1)
+
+    
+    const getMoreEvents = () => {
+      axios.get(`users/${username}/events?page=${page}`).then((res) => {
+        if (res.data.length == 0) setHasmore(false)
+        setEvents((events) => [...events, ...res.data])
+        console.log(res.data)
+        setPage(page + 1)
+      }).catch(error => {
+        Router.push({pathname: "/"})
+      })
+    }
 
       useEffect(() => {
         if (!username) return
@@ -70,19 +86,14 @@ const TimelinePage: NextPage = () => {
 
         // Get user info
         axios.get(`users/${username}`).then((res) => {
-            setUser(res.data)
+          setUser(res.data)
         }).catch(error => {
             Router.push({pathname: "/"})
             console.log("User not found")
         }) 
 
 
-        axios.get(`users/${username}/received_events`).then((res) => {
-          setEvents(res.data)
-          console.log(res.data)
-        }).catch(error => {
-          Router.push({pathname: "/"})
-        })
+        getMoreEvents()
 
     }, [username])
 
@@ -113,6 +124,8 @@ const TimelinePage: NextPage = () => {
 
       <Timeline>
         <Events>
+        <InfiniteScroll dataLength={events.length} endMessage={<h3>Done!</h3>} hasMore={hasMore} next={getMoreEvents} loader={<h3>Loading...</h3>}>
+
         {events.map((event) => (
           <Event key={event.id} date={prettyDate(event.created_at)}>
           <div>
@@ -124,6 +137,7 @@ const TimelinePage: NextPage = () => {
           </div>
           </Event>
         ))}
+        </InfiniteScroll>
         </Events>
       </Timeline>
 
