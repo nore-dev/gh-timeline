@@ -12,13 +12,17 @@ import {
 } from '@merc/react-timeline';
 import prettyDate from "../../lib/prettydate"
 import {GHEvent, GHUser} from "../../lib/GHType"
-import CDEvent from "../../components/CreateAndDeleteEvent"
 
 const renderEvent = (event:GHEvent) => {
   switch (event.type) {
     case "CreateEvent":
+      return <>
+            {" created "} {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
+            </>
     case "DeleteEvent":
-        return <CDEvent event={event}/>
+      return <>
+            {" deleted "} {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
+             </>
     case "ForkEvent":
     case "GollumEvent":
     case "IssueCommentEvent":
@@ -31,13 +35,12 @@ const renderEvent = (event:GHEvent) => {
     case "SponsorshipEvent":
     case "CommitCommentEvent":
     case "WatchEvent":
-      return  <Event date={prettyDate(event.created_at)} key={event.id}>
-        <div>
-        <Image src={event.actor.avatar_url} alt="pp" width={50} height={50} className="rounded"></Image>
-        <h3>{event.type}</h3>
-        <h4>{event.repo.name}</h4>
-        </div>
-      </Event>
+    case "PushEvent":
+      return <>
+      <h3>{event.type}</h3>
+      <h4>{event.repo.name}</h4>
+
+      </>
    
   }
 }
@@ -93,9 +96,16 @@ const TimelinePage: NextPage = () => {
         
 
       <Timeline>
-        <Events >
+        <Events>
         {events.map((event) => (
-          renderEvent(event)
+          <Event key={event.id} date={prettyDate(event.created_at)}>
+          <div>
+          <Image src={event.actor.avatar_url} alt="actor avatar" width={70} height={70}></Image>
+          <p><b>@{event.actor.login}</b>
+          {renderEvent(event)}
+          </p>
+          </div>
+          </Event>
         ))}
         </Events>
       </Timeline>
