@@ -23,6 +23,24 @@ const renderEvent = (event:GHEvent) => {
       return <>
             {" deleted "} {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
              </>
+    case "PublicEvent":
+      return <>
+            {" made "} <b>{event.repo.name}</b> {" public"}
+             </>
+    case "WatchEvent":
+      return <>
+            {" starred "} <b>{event.repo.name}</b>
+            </>
+    case "PushEvent":
+      return <>
+            {" pushed "} to <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
+            </>
+    case "ReleaseEvent":
+      return <> {event.payload.action} <b> {event.payload.release.name}</b> <div dangerouslySetInnerHTML={{__html: event.payload.release.short_description_html}}></div>
+            </>
+    case "CommitCommentEvent":
+      return <> commented on commit <p>{"'"}{event.payload.comment.body}{"'"}</p>
+            </>
     case "ForkEvent":
     case "GollumEvent":
     case "IssueCommentEvent":
@@ -31,11 +49,7 @@ const renderEvent = (event:GHEvent) => {
     case "PullRequestEvent":
     case "PullRequestReviewEvent":
     case "PullRequestReviewCommentEvent":
-    case "ReleaseEvent":
     case "SponsorshipEvent":
-    case "CommitCommentEvent":
-    case "WatchEvent":
-    case "PushEvent":
       return <>
       <h3>{event.type}</h3>
       <h4>{event.repo.name}</h4>
@@ -63,7 +77,7 @@ const TimelinePage: NextPage = () => {
         }) 
 
 
-        axios.get(`users/${username}/events`).then((res) => {
+        axios.get(`users/${username}/received_events`).then((res) => {
           setEvents(res.data)
           console.log(res.data)
         }).catch(error => {
@@ -84,7 +98,9 @@ const TimelinePage: NextPage = () => {
         { user.avatar_url &&
           <Image width={150} height={150} src={user.avatar_url} alt="profile_photo" className="rounded"/>
         }
-        <h1>{user.login}</h1>
+        <h2>@{user.login}</h2>
+        <h3>{user.display_login}</h3>
+
         <h3>{user.bio}</h3>
         <div>
         <h3>{user.followers}</h3><p>Followers</p>
@@ -100,8 +116,9 @@ const TimelinePage: NextPage = () => {
         {events.map((event) => (
           <Event key={event.id} date={prettyDate(event.created_at)}>
           <div>
-          <Image src={event.actor.avatar_url} alt="actor avatar" width={70} height={70}></Image>
-          <p><b>@{event.actor.login}</b>
+          <Image src={event.actor.avatar_url} alt="actor avatar" className="rounded" width={70} height={70}></Image>
+          <p>
+          <b>@{event.actor.login}</b>
           {renderEvent(event)}
           </p>
           </div>
