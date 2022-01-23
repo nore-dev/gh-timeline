@@ -11,8 +11,9 @@ import {
   Event
 } from '@merc/react-timeline';
 import prettyDate from "../../lib/prettydate"
+import {GHEvent, GHUser} from "../../lib/GHType"
 
-const renderEvent = (event:any) => {
+const renderEvent = (event:GHEvent) => {
   switch (event.type) {
     case "CreateEvent":
     case "DeleteEvent":
@@ -32,7 +33,6 @@ const renderEvent = (event:any) => {
         <div>
         <Image src={event.actor.avatar_url} alt="pp" width={50} height={50} className="rounded"></Image>
         <h3>{event.type}</h3>
-
         <h4>{event.repo.name}</h4>
         </div>
       </Event>
@@ -42,8 +42,8 @@ const renderEvent = (event:any) => {
 
 const TimelinePage: NextPage = () => {
     const { username } = useRouter().query
-    const [user, setUser] = useState<any>({})
-    const [events, setEvents] = useState<any[]>([])
+    const [user, setUser] = useState<GHUser>({} as GHUser)
+    const [events, setEvents] = useState<GHEvent[]>([])
 
       useEffect(() => {
         if (!username) return
