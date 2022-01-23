@@ -12,11 +12,13 @@ import {
 } from '@merc/react-timeline';
 import prettyDate from "../../lib/prettydate"
 import {GHEvent, GHUser} from "../../lib/GHType"
+import CDEvent from "../../components/CreateAndDeleteEvent"
 
 const renderEvent = (event:GHEvent) => {
   switch (event.type) {
     case "CreateEvent":
     case "DeleteEvent":
+        return <CDEvent event={event}/>
     case "ForkEvent":
     case "GollumEvent":
     case "IssueCommentEvent":
