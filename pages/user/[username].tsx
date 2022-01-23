@@ -10,6 +10,7 @@ import {
   Events,
   Event
 } from '@merc/react-timeline';
+import prettyDate from "../../lib/prettydate"
 
 const renderEvent = (event:any) => {
   switch (event.type) {
@@ -27,7 +28,7 @@ const renderEvent = (event:any) => {
     case "SponsorshipEvent":
     case "CommitCommentEvent":
     case "WatchEvent":
-      return  <Event date={event.created_at} key={event.id}>
+      return  <Event date={prettyDate(event.created_at)} key={event.id}>
         <div>
         <Image src={event.actor.avatar_url} alt="pp" width={50} height={50} className="rounded"></Image>
         <h3>{event.type}</h3>
