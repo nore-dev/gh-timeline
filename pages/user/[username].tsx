@@ -56,14 +56,25 @@ const renderEvent = (event:GHEvent) => {
               <p><i>{"'"}{event.payload.issue.body}{"'"}</i></p>
             </>
     case "PullRequestEvent":
-      return <> {event.payload.action} a pull request at <b>{event.repo.name}</b>
+      return <> {event.payload.action == "closed" ? (event.payload.pull_request.merged ? "merged": "closed"): event.payload.action} a pull request at <b>{event.repo.name}</b>
               <h3>{event.payload.pull_request.title}</h3>
               <p><i>{"'"}{event.payload.pull_request.body}{"'"}</i></p>
             </>
-    case "GollumEvent":
-    case "MemberEvent":
-    case "PullRequestReviewEvent":
     case "PullRequestReviewCommentEvent":
+      return <> commented on pull request at <b>{event.repo.name}</b>
+              <p><i>{"'"}{event.payload.comment.body}{"'"}</i></p> <h3>to</h3>
+              <Image src={event.payload.pull_request.user.avatar_url} alt="user avatar" width={70} height={70} className="rounded"></Image>
+              <div>
+                <b>@{event.payload.pull_request.user.login}</b> {event.payload.action} pull request
+                <h3>{event.payload.pull_request.title}</h3>
+                <p><i>{"'"}{event.payload.pull_request.body}{"'"}</i></p>
+              </div>
+            </>
+    case "MemberEvent":
+      return <> {event.payload.action} <b>@{event.payload.member.login}</b> at <b>{event.repo.name}</b>
+            </>
+    case "GollumEvent":
+    case "PullRequestReviewEvent":
     case "SponsorshipEvent":
       return <>
       <h3>{event.type}</h3>
@@ -80,7 +91,7 @@ const TimelinePage: NextPage = () => {
     const [user, setUser] = useState<GHUser>({} as GHUser)
     const [events, setEvents] = useState<GHEvent[]>([])
     const [hasMore, setHasmore] = useState(true)
-    const [page, setPage] = useState(1)
+    const [page, setPage] = useState(0)
 
     
     const getMoreEvents = () => {
