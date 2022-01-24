@@ -17,47 +17,51 @@ import InfiniteScroll from "react-infinite-scroll-component"
 const renderEvent = (event:GHEvent) => {
   switch (event.type) {
     case "CreateEvent":
-      return <>
-            {" created "} {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
+      return <> created {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
             </>
     case "DeleteEvent":
-      return <>
-            {" deleted "} {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
+      return <> deleted {event.payload.ref_type} <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
              </>
     case "PublicEvent":
-      return <>
-            {" made "} <b>{event.repo.name}</b> {" public"}
+      return <> made <b>{event.repo.name}</b> public
              </>
     case "WatchEvent":
-      return <>
-            {" starred "} <b>{event.repo.name}</b>
+      return <> starred <b>{event.repo.name}</b>
             </>
     case "PushEvent":
-      return <>
-            {" pushed "} to <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
+      return <> pushed to <b>{event.payload.ref}</b> at <h4>{event.repo.name}</h4>
             </>
     case "ReleaseEvent":
       return <> {event.payload.action} <b> {event.payload.release.name}</b> <div dangerouslySetInnerHTML={{__html: event.payload.release.short_description_html}}></div>
             </>
     case "CommitCommentEvent":
-      return <> commented on commit <p>{"'"}{event.payload.comment.body}{"'"}</p>
+      return <> commented on commit <p><i>{"'"}{event.payload.comment.body}{"'"}</i></p>
             </>
     case "IssueCommentEvent":
       return <> commented on {event.payload.issue.pull_request ? "pull request" : "issue"} at <b>{event.repo.name}</b>
-              <p>{"'"}{event.payload.comment.body}{"'"}</p> <h3>to</h3>
+              <p><i>{"'"}{event.payload.comment.body}{"'"}</i></p> <h3>to</h3>
               <Image src={event.payload.issue.user.avatar_url} alt="user avatar" width={70} height={70} className="rounded"></Image>
               <div>
                 <b>@{event.payload.issue.user.login}</b> {event.payload.action} {event.payload.issue.pull_request ? "pull request" : "issue"}
                 <h3>{event.payload.issue.title}</h3>
-                <p>{"'"}{event.payload.issue.body}{"'"}</p>
+                <p><i>{"'"}{event.payload.issue.body}{"'"}</i></p>
               </div>
             </>
     case "ForkEvent":
-    case "GollumEvent":
-    case "IssueCommentEvent":
+      return <> forked <b>{event.repo.name}</b>
+            </>
     case "IssuesEvent":
-    case "MemberEvent":
+      return <> {event.payload.action} an issue at <b>{event.repo.name}</b>
+              <h3>{event.payload.issue.title}</h3>
+              <p><i>{"'"}{event.payload.issue.body}{"'"}</i></p>
+            </>
     case "PullRequestEvent":
+      return <> {event.payload.action} a pull request at <b>{event.repo.name}</b>
+              <h3>{event.payload.pull_request.title}</h3>
+              <p><i>{"'"}{event.payload.pull_request.body}{"'"}</i></p>
+            </>
+    case "GollumEvent":
+    case "MemberEvent":
     case "PullRequestReviewEvent":
     case "PullRequestReviewCommentEvent":
     case "SponsorshipEvent":
