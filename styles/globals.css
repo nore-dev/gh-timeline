@@ -22,3 +22,8 @@ a {
 .rounded {
   border-radius: 100%;
 }
+
+.flex {
+  display: flex;
+  justify-content: center;
+}

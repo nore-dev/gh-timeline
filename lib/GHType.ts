@@ -24,6 +24,7 @@ export type GHEvent = {
     id: string,
     type: string,
     actor: GHActor,
+    org?: GHActor,
     repo: GHRepo,
     payload: any,
     public: boolean,

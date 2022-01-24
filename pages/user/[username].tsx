@@ -140,7 +140,10 @@ const TimelinePage: NextPage = () => {
         {events.map((event) => (
           <Event key={event.id} date={prettyDate(event.created_at)}>
           <div>
+          <div className="flex">
           <Image src={event.actor.avatar_url} alt="actor avatar" className="rounded" width={70} height={70}></Image>
+          {event.org?.avatar_url  && <Image src={event.org.avatar_url} alt="actor avatar" className="rounded" width={70} height={70}></Image>}
+          </div>
           <p>
           <b>@{event.actor.login}</b>
           {renderEvent(event)}
