@@ -42,6 +42,16 @@ const renderEvent = (event:GHEvent) => {
     case "CommitCommentEvent":
       return <> commented on commit <p>{"'"}{event.payload.comment.body}{"'"}</p>
             </>
+    case "IssueCommentEvent":
+      return <> commented on {event.payload.issue.pull_request ? "pull request" : "issue"} at <b>{event.repo.name}</b>
+              <p>{"'"}{event.payload.comment.body}{"'"}</p> <h3>to</h3>
+              <Image src={event.payload.issue.user.avatar_url} alt="user avatar" width={70} height={70} className="rounded"></Image>
+              <div>
+                <b>@{event.payload.issue.user.login}</b> {event.payload.action} {event.payload.issue.pull_request ? "pull request" : "issue"}
+                <h3>{event.payload.issue.title}</h3>
+                <p>{"'"}{event.payload.issue.body}{"'"}</p>
+              </div>
+            </>
     case "ForkEvent":
     case "GollumEvent":
     case "IssueCommentEvent":
@@ -95,6 +105,7 @@ const TimelinePage: NextPage = () => {
 
         getMoreEvents()
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [username])
 
     return (
