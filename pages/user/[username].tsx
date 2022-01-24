@@ -87,7 +87,7 @@ const renderEvent = (event:GHEvent) => {
 
 
 const TimelinePage: NextPage = () => {
-    const { username } = useRouter().query
+    const { username, received } = useRouter().query
     const [user, setUser] = useState<GHUser>({} as GHUser)
     const [events, setEvents] = useState<GHEvent[]>([])
     const [hasMore, setHasmore] = useState(true)
@@ -95,7 +95,9 @@ const TimelinePage: NextPage = () => {
 
     
     const getMoreEvents = () => {
-      axios.get(`users/${username}/events?page=${page}`).then((res) => {
+      const eventStr = received == "true" ? "received_events" : "events" // :/
+
+      axios.get(`users/${username}/${eventStr}?page=${page}`).then((res) => {
         if (res.data.length == 0) setHasmore(false)
         setEvents((events) => [...events, ...res.data])
         console.log(res.data)
@@ -131,17 +133,18 @@ const TimelinePage: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-        <div>
+        <div style={{marginTop: 30}}>
         { user.avatar_url &&
           <Image width={150} height={150} src={user.avatar_url} alt="profile_photo" className="rounded"/>
         }
         <h2>@{user.login}</h2>
-        <h3>{user.display_login}</h3>
 
-        <h3>{user.bio}</h3>
-        <div>
-        <h3>{user.followers}</h3><p>Followers</p>
-        <h3>{user.following}</h3><p>Following</p>
+        <h4>{user.bio}</h4>
+        <p>has <b>{user.public_repos}</b> public repos</p>
+
+        <div className="flex">
+        <div style={{margin: 10}}><h3>{user.followers}</h3><p>Followers</p></div>
+        <div style={{margin: 10}}><h3>{user.following}</h3><p>Following</p></div>
         </div>
 
 

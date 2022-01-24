@@ -17,7 +17,8 @@ export type GHActor = {
 export type GHUser = GHActor & {
     bio: string,
     following: number,
-    followers: number
+    followers: number,
+    public_repos: number
 }
 
 export type GHEvent = {
