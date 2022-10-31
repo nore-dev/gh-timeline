@@ -13,7 +13,7 @@ const SearchBar: FC<SearchBarProps> = ():ReactElement => {
 
         <Link href={`/user/${username}?received=${received}`} passHref><a className="get-timeline">Get Timeline</a></Link>
         <br></br>
-        <label htmlFor="received">Get received events</label>
+        <label htmlFor="received" style={{color: '#0b0a0aba'}}>Get received events</label>
         <input type="checkbox" id="received" onChange={(e) => setReceived(!received)} checked={received}></input>
     </div>
 }

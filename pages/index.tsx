@@ -13,7 +13,7 @@ const Home: NextPage = () => {
       </Head>
 
       <div>
-      <h1 style={{fontSize: 70}}>Github Timeline</h1>
+      <h1 style={{color:'#0b0a0aba',fontSize: 70}}>Github Timeline</h1>
       <SearchBar/>
       </div>
 

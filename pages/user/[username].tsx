@@ -5,14 +5,24 @@ import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import Image from "next/image"
+
+
 import {
   Timeline,
   Events,
-  Event
+  Event,
+
 } from '@merc/react-timeline';
 import prettyDate from "../../lib/prettydate"
 import {GHEvent, GHUser} from "../../lib/GHType"
 import InfiniteScroll from "react-infinite-scroll-component"
+import { url } from "inspector"
+
+// const customTheme = createTheme(themes.default, {
+//   card: {
+//     backgroundColor: '#474E68',
+//   },
+// });
 
 const renderEvent = (event:GHEvent) => {
   switch (event.type) {
@@ -93,7 +103,6 @@ const TimelinePage: NextPage = () => {
     const [hasMore, setHasmore] = useState(true)
     const [page, setPage] = useState(0)
 
-    
     const getMoreEvents = () => {
       const eventStr = received == "true" ? "received_events" : "events" // :/
 
@@ -128,7 +137,7 @@ const TimelinePage: NextPage = () => {
     return (
     <div className="text-center">
       <Head>
-        <title>@{username}</title>
+        <title color="#0b0a0aba">@{username}</title>
         <meta name="description" content="Description" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -140,24 +149,24 @@ const TimelinePage: NextPage = () => {
         <h2>@{user.login}</h2>
 
         <h4>{user.bio}</h4>
-        <p>has <b>{user.public_repos}</b> public repos</p>
+        <p style={{color: "#0b0a0aba"}}>has <b>{user.public_repos}</b> public repos</p>
 
         <div className="flex">
-        <div style={{margin: 10}}><h3>{user.followers}</h3><p>Followers</p></div>
-        <div style={{margin: 10}}><h3>{user.following}</h3><p>Following</p></div>
+        <div style={{color:"#0b0a0aba" ,margin: 10}}><h3>{user.followers}</h3><p>Followers</p></div>
+        <div style={{color:"#0b0a0aba" ,margin: 10}}><h3>{user.following}</h3><p>Following</p></div>
         </div>
 
 
         </div>
         
 
-      <Timeline>
-        <Events>
+      <Timeline> 
+        <Events >
         <InfiniteScroll dataLength={events.length} endMessage={<h3>Done!</h3>} hasMore={hasMore} next={getMoreEvents} loader={<h3>Loading...</h3>}>
-
+        
         {events.map((event) => (
-          <Event key={event.id} date={prettyDate(event.created_at)}>
-          <div>
+          <Event key={event.id} date={prettyDate(event.created_at)} style={{padding: 'none'}}>
+          <div className="myImg" style={{borderRadius:'4px' ,padding: '1rem', background: `url('https://images.unsplash.com/photo-1550895030-823330fc2551?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=687&q=80')`}}>
           <div className="flex">
           <Image src={event.actor.avatar_url} alt="actor avatar" className="rounded" width={70} height={70}></Image>
           {event.org?.avatar_url  && <Image src={event.org.avatar_url} alt="actor avatar" className="rounded" width={70} height={70}></Image>}
